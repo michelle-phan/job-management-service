@@ -1,0 +1,63 @@
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
+
+  datasource:
+    url: jdbc:mysql://${DB_SERVER:localhost}:${DB_PORT:3306}/search-jms?useUnicode=true&characterEncoding=utf8&useSSL=false&verifyServerCertificate=false&requireSSL=false&serverTimezone=UTC
+    username: ${SECRETS_DB_USER:root}
+    password: ${SECRETS_DB_PASSWORD:}
+
+    hikari:
+      data-source-properties:
+        maximumPoolSize: 50
+        maxLifetime: 49000
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+        leakDetectionThreshold: 60000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+
+logging.level.root: INFO
+
+#logging.level.org.hibernate.SQL: DEBUG
+#logging.level.org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+server:
+  port: 18081
+  tomcat:
+    max-swallow-size : -1
+
+jms:
+  upload:
+    path: ${JMS_UPLOAD_PATH:/Users/michellephan/Documents/NUS/capstone/airflow-spark-local/spark/}
+  airflow:
+    path: ${AIRFLOW_PATH:/Users/michellephan/Documents/NUS/capstone/airflow-spark-local/airflow/dags/}
+    template: classpath:template.py
+    file-extension: .py
+    host: ${AIRFLOW_HOST:http://localhost:8082/}
+    run: /api/experimental/dags/<DAG_NAME>/dag_runs
+    pause: /api/experimental/dags/<DAG_NAME>/paused/<IS_PAUSE>
+  spark:
+    livy-host: ${SPARK_LIVY_HOST:http://192.168.0.138:8998}
+    path:
+      local: /Users/michellephan/Documents/NUS/sparkjob/
+      docker: file:///usr/local/livy/scripts/
+      azure: wasbs://
+
+

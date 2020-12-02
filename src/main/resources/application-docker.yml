@@ -1,0 +1,9 @@
+server:
+  port: 8080
+  
+spring:
+
+  datasource:
+    url: jdbc:mysql://jms-mysql:3306/search-jms?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: ${SECRETS_DB_USER:root}
+    password: ${SECRETS_DB_PASSWORD:}
